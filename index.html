@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIKYA Corporation - Официальный сайт</title>
+    <style>
+        :root { 
+            --bg: #0d0d12; --card: #161622; --text: #ffffff; --text-gray: #8f92a1; 
+            --blue: #4285F4; --red: #ea4335; --green: #2ecc71; --gold: linear-gradient(45deg, #ffe066, #f5b041); 
+        }
+        body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        /* Шапка корпорации */
+        .top-bar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #232335; padding-bottom: 15px; }
+        
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(to right, #4285F4, #ffe066, #fe0979, #34A853, #4285F4); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 4s linear infinite; }
+        @keyframes shine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+        
+        .nav-group { display: flex; gap: 8px; }
+        .btn { padding: 10px 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
+        .btn-blue { background: var(--blue); } .btn-green { background: var(--green); } .btn-red { background: var(--red); } .btn-gray { background: #2c2c3e; }
+        .btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
+        
+        .premium-badge { display: none; background: var(--gold); color: #000; padding: 5px 15px; font-size: 12px; font-weight: bold; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,224,102,0.4); }
+
+        /* Поисковая экосистема */
+        .search-box { width: 100%; max-width: 650px; display: flex; background: var(--card); border: 1px solid #232335; border-radius: 30px; padding: 12px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); margin-bottom: 30px; cursor: pointer; }
+        .search-box input { flex: 1; border: none; outline: none; font-size: 16px; background: transparent; color: white; cursor: pointer; }
+
+        /* Корпоративная панель Продуктов (Табло) */
+        .products-section { width: 100%; max-width: 650px; text-align: left; margin-bottom: 30px; }
+        .section-title { font-size: 18px; font-weight: bold; color: var(--text-gray); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .product-card { background: var(--card); border: 1px solid #232335; padding: 20px; border-radius: 16px; text-align: center; text-decoration: none; color: white; font-weight: bold; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .product-card:hover { transform: translateY(-4px); border-color: var(--blue); }
+        .prod-icon { font-size: 28px; }
+
+        /* Панель ИИ на главной */
+        .panel { width: 100%; max-width: 650px; background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid #232335; margin-bottom: 20px; box-sizing: border-box; }
+        .chat-box { background: rgba(0,0,0,0.2); border: 1px solid #1f1f30; padding: 12px; height: 120px; overflow-y: auto; border-radius: 10px; font-size: 14px; text-align: left; margin-bottom: 12px; color: #e0e0e6; }
+
+        /* Окна Модалок */
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 999; backdrop-filter: blur(4px); }
+        .modal { background: var(--card); padding: 25px; border-radius: 20px; width: 90%; max-width: 420px; border: 1px solid #232335; position: relative; box-sizing: border-box; text-align: center; }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 26px; cursor: pointer; color: var(--text-gray); }
+        .form { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .form input, .form textarea { width: 100%; padding: 11px; border: 1px solid #232335; border-radius: 8px; box-sizing: border-box; outline: none; background: #0d0d12; color: white; }
+        
+        .settings-tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #232335; padding-bottom: 10px; }
+        .tab-btn { flex:1; padding: 6px; background: none; border: none; color: var(--text-gray); cursor: pointer; font-weight: bold; font-size: 13px; }
+        .tab-btn.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
+    </style>
+</head>
+<body>
+
+    <!-- Главная Корпоративная Панель -->
+    <div class="top-bar">
+        <div class="logo">TIKYA</div>
+        <div class="nav-group">
+            <button class="btn btn-gray" onclick="openM('aboutModal')">🏢 О компании</button>
+            <button class="btn btn-green" id="regBtn" onclick="openM('regModal')">Вход</button>
+            <button class="btn btn-gray" id="logoutBtn" style="display:none;" onclick="logout()">Выйти</button>
+            <button class="btn btn-gray" onclick="openM('settingsModal')">⚙️ Настройки</button>
+        </div>
+    </div>
+
+    <div class="premium-badge" id="premiumBadge">✦ КОРПОРАТИВНЫЙ ДОСТУП TIKYA+ ✦</div>
+
+    <!-- Наша Умная Поисковая Строка -->
+    <div class="search-box" onclick="window.open('https://google.com', '_blank')">
+        <input type="text" placeholder="Поиск по всемирной сети TIKYA Search (через Google)..." readonly>
+        <span style="font-size:18px;">🔍</span>
+    </div>
+
+    <!-- КОРПОРАТИВНЫЕ ПРОДУКТЫ -->
+    <div class="products-section">
+        <div class="section-title">Экосистема TIKYA Corporation</div>
+        <div class="products-grid">
+            <a href="#" class="product-card" onclick="openM('tmailModal'); return false;">
+                <span class="prod-icon">📬</span>
+                <span>Tmail</span>
+            </a>
+            <a href="https://tiktok.com" target="_blank" class="product-card">
+                <span class="prod-icon">🎬</span>
+                <span>TikTok</span>
+            </a>
+            <a href="https://tiktok.com" target="_blank" class="product-card" style="background: linear-gradient(45deg, #010101, #fe0979); border: none;">
+                <span class="prod-icon">🚀</span>
+                <span style="font-size: 13px;">РЖАКА / ДИМА</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ВСТРОЕННЫЙ ИИ НА ГЛАВНОЙ СТРАНИЦЕ -->
+    <div class="panel" id="aiPanel">
+        <h3 style="margin-top:0; color:var(--blue);" id="aiTitle">🤖 Корпоративный ИИ Ассистент</h3>
+        <div class="chat-box" id="aiBox"><strong>ИИ:</strong> Привет! Я главный ИИ-помощник TIKYA Corporation. Рад приветствовать тебя в нашем офисе разработки! Могу рассказать про наши проекты, команду Димы или выдать шутку.</div>
+        <div style="display:flex; gap:6px;">
+            <input type="text" id="aiInput" style="flex:1; padding:11px; border-radius:10px; border:1px solid #232335; background:#0d0d12; color:white; outline:none;" placeholder="Спросить у ИИ корпорации...">
+            <button class="btn btn-blue" onclick="sendAi()">Спросить</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: О КОМПАНИИ -->
+    <div class="overlay" id="aboutModal">
+        <div class="modal">
+            <span class="close" onclick="closeM('aboutModal')">&times;</span>
+            <h3 style="margin-top:0; color:var(--green);">🏢 О холдинге TIKYA Corp</h3>
+            <p style="text-align:left; font-size:14px; line-height:1.5; color:var(--text-gray);">
+                <strong>TIKYA Corporation</strong> — это передовая технологическая компания, созданная великим разработчиком Димой. Мы создаем лучшие интернет-сервисы: самый быстрый браузер TIKYA, защищенный мессенджер Tmail и уникальные ИИ-системы. Наша цель — разрывать рекомендации ТикТока и делать интернет веселым!
+            </p>
+            <div style="background:#0d0d12; padding:10px; border-radius:10px; font-size:13px; text-align:left;">
+                👑 <strong>Генеральный директор:</strong> Дима<br>
+                💻 <strong>Штат сотрудников:</strong> 1 гениальный кодер<br>
+                🚀 <strong>Главный проект:</strong> Канал РЖАКА / ДИМА
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: РЕГИСТРАЦИЯ -->
+    <div class="overlay" id="regModal">
+        <div class="modal">
+            <span class="close" onclick="closeM('regModal')">&times;</span>
+            <h3>🔑 Личный кабинет сотрудника</h3>
+            <form class="form" onsubmit="submitReg(event)">
+                <input type="text" id="regName" placeholder="Введи свое имя/никнейм" required>
+                <input type="email" placeholder="Рабочий корпоративный Email" required>
+                <input type="password" placeholder="Пароль доступа" required>
+                <button class="btn btn-green" type="submit">Войти в систему</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: НАСТРОЙКИ -->
+    <div class="overlay" id="settingsModal">
+        <div class="modal">
+            <span class="close" onclick="closeM('settingsModal')">&times;</span>
+            <h3 style="margin-top:0; text-align:left;">⚙️ Панель управления</h3>
+            <div class="settings-tabs">
+                <button class="tab-btn active" id="tPromo" onclick="switchTab('promo')">🎁 Промокод холдинга</button>
+                <button class="tab-btn" id="tSup" onclick="switchTab('sup')">🛠️ Департамент Поддержки</button>
+            </div>
+            <div id="tabPromoView">
